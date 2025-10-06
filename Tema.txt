@@ -1,0 +1,47 @@
+Tema 4: Contratação de serviço de limpeza
+
+Um sistema para uma prestadora de serviço de limpeza (faxinas) precisa
+gerenciar os dados sobre cada faxineiro(a) e os clientes que contratam os seus serviços.
+
+Os dados a serem armazenados sobre cada entidade são apresentados a seguir:
+Faxineiro = (_CPF_, RG, nome, sexo, data de nascimento, telefones)
+Cliente = (_CPF_, nome, data de nascimento, endereço, CEP, cidade, e-mails,
+telefones)
+Serviço = (_CPF faxineiro_, _CPF cliente_, data, valor)
+
+Atenção: os atributos grifados são chaves e você NÃO deve permitir a inclusão
+de mais de um cadastro com os mesmos valores para os atributos chaves.
+
+Utilizando os conhecimentos aprendidos nas aulas, desenvolva um programa
+em C que apresente o seguinte menu de opções para o usuário e implemente cada
+operação usando funções. Escolha a estrutura de dados mais apropriada para
+armazenar os dados de cada entidade descrita anteriormente.
+
+Menu Principal:
+1. Submenu de Faxineiros
+2. Submenu de Clientes
+3. Submenu de Serviços
+4. Submenu Relatórios
+5. Sair
+
+Cada Submenu deverá oferecer as opções: Listar todos, Listar um, Incluir (sem
+repetição), Alterar e Excluir (após confirmação dos dados) um elemento do conjunto. O
+Submenu Relatórios deverá ter uma opção para cada um dos relatórios solicitados
+abaixo.
+
+Relatórios:
+a) Mostrar o nome, os e-mails e telefones de todos(as) os(as) clientes que
+contrataram o serviço de determinado(a) faxineiro(a) entre as datas X e Y.
+O CPF do(a) faxineiro(a) e as datas deverão ser fornecidos pelo usuário;
+b) Mostrar os dados de todos os serviços contratados para uma data
+específica a ser fornecida pelo usuário. Apresente também o nome do(a)
+faxineiro(a) e do(a) cliente;
+c) Mostrar os dados de todos os serviços realizados por determinado(a)
+faxineiro(a), cujo CPF será fornecido pelo usuário.
+
+A aplicação deverá utilizar Arquivos para a persistência dos dados. Em outras
+palavras, cada registro de Faxineiro, Cliente e Serviço deverá ser armazenado em um
+arquivo binário específico, que conterá apenas registros daquele mesmo tipo de
+entidade. Para os relatórios você deverá usar arquivos textos. Utilize estruturas
+dinâmicas como vetores e registros alocados dinamicamente para o armazenamento
+temporário dos dados (ou seja, antes de serem gravados em arquivos).
