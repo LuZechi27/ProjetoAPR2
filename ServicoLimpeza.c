@@ -32,6 +32,26 @@ typedef struct
     int valor;
 } servico;
 
+int saveFaxineiro(char *fileName, faxineiro *vect, int size)
+{
+    FILE *file;
+    int i;
+    if ((file = fopen(fileName, "ab+")) == NULL)
+        return 0;
+    for (i = 0; i < size; i++)
+    {
+        if (fwrite(&vect[i], sizeof(faxineiro), 1, file) != 1)
+        {
+            printf("Erro na escrita do elemento de indice %d", i);
+            perror("Erro");
+        }
+        if (feof(file))
+            return 0;
+    }
+    fclose(file);
+    return 1;
+}
+
 int menu()
 {
     int opt;
@@ -48,7 +68,7 @@ int menu()
 
 int subMenu()
 {
-    int opt; //Listar todos, Listar um, Incluir (sem repetição), Alterar e Excluir
+    int opt; // Listar todos, Listar um, Incluir (sem repetição), Alterar e Excluir
     printf("\n1. Listar todos\n");
     printf("2. Listar um\n");
     printf("3. Incluir\n");
@@ -76,34 +96,35 @@ int subMenuRelatorios()
 
 int main()
 {
-    setlocale(LC_ALL,"Portuguese");
+    setlocale(LC_ALL, "Portuguese");
+    FILE *dados, *relatorios;
     int opcao;
     do
     {
         opcao = menu();
         switch (opcao)
         {
-            case 1:
-                //Submenu de Faxineiros
-                printf("1. Submenu de Faxineiros");
-                break;
-            case 2:
-                //Submenu de Clientes
-                printf("2. Submenu de Clientes");
-                break;
-            case 3:
-                //Submenu de Serviços
-                printf("3. Submenu de Serviços");
-                break;
-            case 4:
-                //Submenu Relatórios
-                printf("4. Submenu Relatórios");
-                break;
-            case 5:
-                printf("\nSaindo...\n");
-                break;
-            default:
-                printf("\nOpção inválida!\n");
+        case 1:
+            // Submenu de Faxineiros
+            printf("1. Submenu de Faxineiros");
+            break;
+        case 2:
+            // Submenu de Clientes
+            printf("2. Submenu de Clientes");
+            break;
+        case 3:
+            // Submenu de Serviços
+            printf("3. Submenu de Serviços");
+            break;
+        case 4:
+            // Submenu Relatórios
+            printf("4. Submenu Relatórios");
+            break;
+        case 5:
+            printf("\nSaindo...\n");
+            break;
+        default:
+            printf("\nOpção inválida!\n");
         }
     } while (opcao != 5);
 }
