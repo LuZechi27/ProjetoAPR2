@@ -6,38 +6,38 @@ typedef struct
 {
     long int cpf;
     long int rg;
-    char *nome;
+    char nome[50];
     char sexo;
     char data_nascimento[11];
-    long int *telefones;
-} Faxineiro;
+    long int telefones[10];
+} faxineiro;
 
 typedef struct
 {
-    char cpf[15];
-    char *nome;
+    long int cpf;
+    char nome[50];
     char data_nascimento[11];
-    char *endereço;
+    char endereço[100];
     char cep[10];
-    char *cidade;
-    char *emails;
-    char *telefones;
-} Cliente;
+    char cidade[100];
+    char emails[10][100];
+    long int telefones[10];
+} cliente;
 
 typedef struct
 {
-    char *cpf_faxineiro;
-    char *cpf_cliente;
+    long int cpf_faxineiro;
+    long int cpf_cliente;
     char data[11];
     float valor;
-} Servico;
+} servico;
 
-Faxineiro *carregar_faxineiros(char *nome_arquivo)
+faxineiro *carregar_faxineiros(char *nome_arquivo, int *retorno_tamanho_vetor)
 {
     FILE *arquivo;
-    Faxineiro *vetor_faxineiros;
+    faxineiro *vetor_faxineiros;
     int i;
-    int tamanho_vetor, tamanho_nome, quantidade_telefones;
+    int tamanho_vetor, tamanho_nome = 50, quantidade_telefones = 10;
     int tamanho_data_nasc = 11;
 
     if ((arquivo = fopen(nome_arquivo, "wd+")) == NULL)
@@ -55,7 +55,10 @@ Faxineiro *carregar_faxineiros(char *nome_arquivo)
     ...
     */
     fread(&tamanho_vetor, sizeof(int), 1, arquivo);
-    vetor_faxineiros = (Faxineiro *)malloc(tamanho_vetor * sizeof(Faxineiro));
+    if ((vetor_faxineiros = (faxineiro *)malloc(tamanho_vetor * sizeof(faxineiro))) == NULL)
+    {
+        return NULL;
+    }
 
     for (i = 0; i < tamanho_vetor; i++)
     {
@@ -63,13 +66,11 @@ Faxineiro *carregar_faxineiros(char *nome_arquivo)
         {
             fread(&vetor_faxineiros[i].cpf, sizeof(long int), 1, arquivo);
             fread(&vetor_faxineiros[i].rg, sizeof(long int), 1, arquivo);
-            fread(&tamanho_nome, sizeof(int), 1, arquivo);
             if (ferror(arquivo))
             {
                 perror("Erro");
                 exit(0);
             }
-            vetor_faxineiros[i].nome = (char *)malloc(tamanho_nome * sizeof(char));
             if ((fread(&vetor_faxineiros[i].nome, sizeof(char), tamanho_nome, arquivo)) != tamanho_nome)
             {
                 perror("Erro ao ler o nome");
@@ -82,8 +83,6 @@ Faxineiro *carregar_faxineiros(char *nome_arquivo)
                 perror("Erro");
                 exit(0);
             }
-            fread(&quantidade_telefones, sizeof(int), 1, arquivo);
-            vetor_faxineiros[i].telefones = (long int *)malloc(quantidade_telefones * sizeof(long int));
             if ((fread(&vetor_faxineiros[i].telefones, sizeof(long int), quantidade_telefones, arquivo)) != quantidade_telefones)
             {
                 perror("Erro ao ler os telefones");
@@ -96,15 +95,11 @@ Faxineiro *carregar_faxineiros(char *nome_arquivo)
             exit(0);
         }
     }
+    *retorno_tamanho_vetor = tamanho_vetor;
     return vetor_faxineiros;
 }
 
-void salvar_faxineiros()
-{
-    
-}
-
-int menu()
+int print_menu()
 {
     int opt;
     printf("\n1. Submenu de Faxineiros\n");
@@ -118,10 +113,10 @@ int menu()
     return opt;
 }
 
-int sub_menu(char *tipo_submenu)
+int print_submenu(char *tipo_submenu)
 {
     int opt; // Listar todos, Listar um, Incluir (sem repetição), Alterar e Excluir
-    printf("\n1. Listar todos os %s\n", tipo_submenu);
+    printf("\n1. Listar todos os %ss\n", tipo_submenu);
     printf("2. Listar um %s\n", tipo_submenu);
     printf("3. Incluir um %s\n", tipo_submenu);
     printf("4. Alterar um %s\n", tipo_submenu);
@@ -133,7 +128,7 @@ int sub_menu(char *tipo_submenu)
     return opt;
 }
 
-int sub_menu_relatorios()
+int print_submenu_relatorios()
 {
     int opt;
     printf("\n1. Listar clientes de um faxineiro entre datas X até Y\n");
@@ -146,14 +141,54 @@ int sub_menu_relatorios()
     return opt;
 }
 
-int main()
+void main_faxineiros()
 {
-    setlocale(LC_ALL, "Portuguese");
-    FILE *dados, *relatorios;
     int opcao;
     do
     {
-        opcao = menu();
+        opcao = print_submenu("faxineiro");
+        switch (opcao)
+        {
+        case 1:
+            // listar todos
+            break;
+        case 2:
+            // listar um
+            break;
+        case 3:
+            // incluir um
+            break;
+        case 4:
+            // alterar um
+            break;
+        case 5:
+            // excluir um
+            break;
+        case 6:
+            printf("\nVoltando...\n");
+            break;
+        default:
+            printf("\nOpção inválida\n");
+        }
+
+    } while (opcao != 6);
+}
+
+int main()
+{
+    setlocale(LC_ALL, "Portuguese");
+    faxineiro *vetor_faxineiros;
+    cliente *vetor_clientes;
+    servico *vetor_servicos;
+    int opcao;
+    char nome_arquivo_faxineiros[] = "dados_faxineiros";
+
+    // if ((vetor_faxineiros = carregar_Faxineiros(nome_arquivo_faxineiros)) == NULL)
+    //     printf("Não foi possível carregar os dados dos faxineiros.");
+
+    do
+    {
+        opcao = print_menu();
         switch (opcao)
         {
         case 1:
