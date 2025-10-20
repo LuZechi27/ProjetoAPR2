@@ -37,63 +37,23 @@ faxineiro *carregar_faxineiros(char *nome_arquivo, int *retorno_tamanho_vetor)
     FILE *arquivo;
     faxineiro *vetor_faxineiros;
     int i;
-    int tamanho_vetor, tamanho_nome = 50, quantidade_telefones = 10;
-    int tamanho_data_nasc = 11;
+    int tamanho_vetor;
 
     if ((arquivo = fopen(nome_arquivo, "wd+")) == NULL)
     {
         perror("Erro ao abrir o arquivo");
         exit(0);
     }
-    /*
-    Conteúdo:
-
-    [quantidade de faxineiros no vetor]
-    [cpf][rg][tamanho do nome][nome][sexo][dt nascimento][quantidade de telefones][vetor de telefones]
-    [cpf][rg][tamanho do nome][nome][sexo][dt nascimento][quantidade de telefones][vetor de telefones]
-    [cpf][rg][tamanho do nome][nome][sexo][dt nascimento][quantidade de telefones][vetor de telefones]
-    ...
-    */
     fread(&tamanho_vetor, sizeof(int), 1, arquivo);
     if ((vetor_faxineiros = (faxineiro *)malloc(tamanho_vetor * sizeof(faxineiro))) == NULL)
     {
-        return NULL;
+        perror("Erro ao alocar o vetor");
+        exit(0);
     }
-
-    for (i = 0; i < tamanho_vetor; i++)
+    if ((fread(&vetor_faxineiros, sizeof(faxineiro), tamanho_vetor, arquivo) != tamanho_vetor))
     {
-        if (!feof(arquivo))
-        {
-            fread(&vetor_faxineiros[i].cpf, sizeof(long int), 1, arquivo);
-            fread(&vetor_faxineiros[i].rg, sizeof(long int), 1, arquivo);
-            if (ferror(arquivo))
-            {
-                perror("Erro");
-                exit(0);
-            }
-            if ((fread(&vetor_faxineiros[i].nome, sizeof(char), tamanho_nome, arquivo)) != tamanho_nome)
-            {
-                perror("Erro ao ler o nome");
-                exit(0);
-            }
-            fread(&vetor_faxineiros[i].sexo, sizeof(char), 1, arquivo);
-            fread(&vetor_faxineiros[i].data_nascimento, sizeof(char), tamanho_data_nasc, arquivo);
-            if (ferror(arquivo))
-            {
-                perror("Erro");
-                exit(0);
-            }
-            if ((fread(&vetor_faxineiros[i].telefones, sizeof(long int), quantidade_telefones, arquivo)) != quantidade_telefones)
-            {
-                perror("Erro ao ler os telefones");
-                exit(0);
-            }
-        }
-        else
-        {
-            perror("Erro");
-            exit(0);
-        }
+        perror("Erro ao carregar os dados");
+        exit(0);
     }
     *retorno_tamanho_vetor = tamanho_vetor;
     return vetor_faxineiros;
@@ -180,12 +140,11 @@ int main()
     faxineiro *vetor_faxineiros;
     cliente *vetor_clientes;
     servico *vetor_servicos;
-    int opcao;
+    int opcao, tamanho_vetor_faxineiros;
     char nome_arquivo_faxineiros[] = "dados_faxineiros";
 
-    // if ((vetor_faxineiros = carregar_Faxineiros(nome_arquivo_faxineiros)) == NULL)
-    //     printf("Não foi possível carregar os dados dos faxineiros.");
-
+    vetor_faxineiros = carregar_faxineiros(nome_arquivo_faxineiros, &tamanho_vetor_faxineiros);
+    
     do
     {
         opcao = print_menu();
